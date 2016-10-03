@@ -1,8 +1,5 @@
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -14,13 +11,13 @@ import java.util.Iterator;
  *
  * @author wadeowen
  */
-public class Huffman<E extends Comparable> {
+public class Huffman {
     
     private ArrayList<Integer> frec = new ArrayList();
     private ArrayList<Character> letras = new ArrayList();
     private BinaryTree tree = new BinaryTree();
     private Heap heap = new Heap();
-    private int contl;
+    private ArrayList<String> message = new ArrayList();
     
     public void getFrequencies(String s){
         s = s.toLowerCase();
@@ -52,9 +49,9 @@ public class Huffman<E extends Comparable> {
     }
     
     public void createTree(){
-        while(heap.getArray().size() != 0){
+        while(!heap.getArray().isEmpty()){
             Nodo temp = heap.getArray().remove();
-            if((tree.getRoot() == null || tree.getRoot().getEle()> temp.getEle()) && heap.getArray().size() != 0){
+            if((tree.getRoot() == null || tree.getRoot().getEle()> temp.getEle()) && !heap.getArray().isEmpty()){
                
                 Nodo temp2 = heap.getArray().remove(); 
                 Nodo temp3 = new Nodo(temp.getEle()+temp2.getEle(),' ');
@@ -105,6 +102,39 @@ public class Huffman<E extends Comparable> {
                 printTree(n.getDer(),s+"1");
         }
         
+    }
+    
+    public void decodMessage(String s){
+        int index = 0;
+        if(s.charAt(s.length()-1) != ' ')
+            s = s + " ";
+        if(s.charAt(0) != ' ')
+            s = " "+s;
+        while(index != -1 && index < s.length()-2){
+            int pro = s.indexOf(" ", index+1)-index;
+            message.add(s.substring(index+1, s.indexOf(" ", index+1)));
+            index = s.indexOf(" ", index+1);
+        }
+        System.out.println("El mensaje es :");
+        for(int i = 0; i < message.size(); i++)
+            printMessage(tree.getRoot(),message.get(i));
+        System.out.println();
+    }
+    
+    public void printMessage(Nodo n,String s){
+        char c;
+        if(s.length() > 0){
+            c = s.charAt(0);
+            if(c == '0')
+                printMessage(n.getIzq(),s.substring(1));
+            if(c == '1')
+                printMessage(n.getDer(),s.substring(1));
+        }else{
+            if(n.getDer() != null || n.getIzq() != null)
+                System.out.println("Codigo Incorrecto");
+            else
+                System.out.print(n.getLetter());
+        }     
     }
     
     public BinaryTree getTree(){

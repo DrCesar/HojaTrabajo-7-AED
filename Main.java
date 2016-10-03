@@ -37,5 +37,9 @@ public class Main {
         huff.createNodos();
         huff.createTree();
         huff.printTree(huff.getTree().getRoot(),"");
+        
+        System.out.println("Ingrese un mensaje codificado. Ej 100 0101 01010 1010 1 01 1 00 1 01. \n Los codigos van separados por espacio.");
+        huff.decodMessage(scan.nextLine());
+    
     }
 }
